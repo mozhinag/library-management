@@ -2,9 +2,10 @@ import React from 'react'
 
 function Booklist() {
   return (
-    <div><div class="container mt-4">
+    <div>
+    <div className="container mt-4">
     <h2>Book Records</h2>
-    <table class="table">
+    <table className="table">
         <thead>
             <tr>
                 <th scope="col">#</th>
