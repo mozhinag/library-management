@@ -1,43 +1,55 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 function Booklist() {
+  const [bookRecords, setBookRecords] = useState([]);
+
+  const fetchAllBooks = async () => {
+    try {
+      const response = await axios.get("https://65acca18adbd5aa31bdf8da5.mockapi.io/details/details");
+      console.log(response.data);
+      if (response.data && Array.isArray(response.data.books)) {
+        setBookRecords(response.data.books);
+      } else {
+        console.error('Books data is not an array:', response.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchAllBooks();
+  }, []);
+
   return (
-    <div>
     <div className="container mt-4">
-    <h2>Book Records</h2>
-    <table className="table">
+      <h2>Book Records</h2>
+      <table className="table">
         <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Title</th>
-                <th scope="col">Author</th>
-                <th scope="col">ISBN</th>
-                <th scope="col">Publication Date</th>
-            </tr>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Title</th>
+            <th scope="col">Author</th>
+            <th scope="col">ISBN</th>
+            <th scope="col">Publication Date</th>
+          </tr>
         </thead>
         <tbody>
-         
-            <tr>
-                <th scope="row">1</th>
-                <td>Book Title 1</td>
-                <td>Author 1</td>
-                <td>ISBN1234567890</td>
-                <td>2022-01-01</td>
+          {bookRecords.map((book, index) => (
+            <tr key={index}>
+              <th scope="row">{index + 1}</th>
+              <td>{book.title}</td>
+        
+              <td>{book.author ? book.author.name : 'N/A'}</td>
+              <td>{book.isbn}</td>
+              <td>{book.publicationDate || 'N/A'}</td>
             </tr>
-            <tr>
-                <th scope="row">2</th>
-                <td>Book Title 2</td>
-                <td>Author 2</td>
-                <td>ISBN0987654321</td>
-                <td>2022-02-01</td>
-            </tr>
-           
+          ))}
         </tbody>
-    </table>
-</div>
-
-</div>
-  )
+      </table>
+    </div>
+  );
 }
 
-export default Booklist
+export default Booklist;

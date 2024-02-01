@@ -7,14 +7,14 @@ import axios from 'axios';
 function AddBooks() {
   
   const [bookRecords, setBookRecords] = useState([]);
-  const [authorRecords, setAuthorRecords] = useState([]);
+ 
 
   const fetchAllBooks = async () => {
     try {
-      const res = await axios.get("https://mockapi.io/projects/65acca18adbd5aa31bdf8da6#");
-      console.log(res);
-      setBookRecords(res.data.books); 
-      setAuthorRecords(res.data.authors); 
+      const books = await axios.get("https://65acca18adbd5aa31bdf8da5.mockapi.io/details/details");
+      console.log(books);
+      setBookRecords(books); 
+      
     } catch (error) {
       console.log(error);
     }
@@ -47,10 +47,10 @@ function AddBooks() {
 
   const onSubmit = async (values, { resetForm }) => {
     try {
-      const res = await axios.post("https://mockapi.io/projects/65acca18adbd5aa31bdf8da6#", values);
-      console.log(res);
-      setBookRecords(res.data.books); 
-      setAuthorRecords(res.data.authors); 
+      const res = await axios.post("https://65acca18adbd5aa31bdf8da5.mockapi.io/details/details", values);
+      console.log(values);
+      setBookRecords(res); 
+     
       resetForm(); 
       alert ('added successfully')
     } catch (error) {
