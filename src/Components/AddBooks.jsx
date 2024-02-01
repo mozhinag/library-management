@@ -13,8 +13,8 @@ function AddBooks() {
     try {
       const res = await axios.get("https://mockapi.io/projects/65acca18adbd5aa31bdf8da6#");
       console.log(res);
-      setBookRecords(res.data.books); // Assuming the response has a 'books' property
-      setAuthorRecords(res.data.authors); // Assuming the response has an 'authors' property
+      setBookRecords(res.data.books); 
+      setAuthorRecords(res.data.authors); 
     } catch (error) {
       console.log(error);
     }
@@ -37,27 +37,28 @@ function AddBooks() {
   const validationSchema = Yup.object().shape({
     title: Yup.string().max(20, 'Title can be max 20 characters').required('Required'),
     language: Yup.string().max(15, 'Language can be max 15 characters').required('Required'),
-    isbn: Yup.string().matches(/^\d{6}$/, 'ISBN must be exactly 10 digits').required('Required'),
+    isbn: Yup.string().required('Required'),
     author: Yup.object().shape({
-      name: Yup.string().max(10, 'Name can be max 10 characters').required('Required'),
+      name: Yup.string().min(10, 'Name can be minimum 10 characters').required('Required'),
       bio: Yup.string().max(30, 'Bio can be max 30 words').required('Required'),
       dob: Yup.date().required('Required'),
     }),
   });
 
-  const onSubmit = (values) => {
-    console.log(values);
-    // const fetchAllBooks = async () => {
-      try {
-        const res = axios.post("https://mockapi.io/projects/65acca18adbd5aa31bdf8da6#");
-        console.log(res);
-        setBookRecords(res.data.books); // Assuming the response has a 'books' property
-        setAuthorRecords(res.data.authors); // Assuming the response has an 'authors' property
-      } catch (error) {
-        console.log(error);
-      }
-    // };
+  const onSubmit = async (values, { resetForm }) => {
+    try {
+      const res = await axios.post("https://mockapi.io/projects/65acca18adbd5aa31bdf8da6#", values);
+      console.log(res);
+      setBookRecords(res.data.books); 
+      setAuthorRecords(res.data.authors); 
+      resetForm(); 
+      alert ('added successfully')
+    } catch (error) {
+      console.log(error);
+     
+    }
   };
+  
 
   return (
     <>
