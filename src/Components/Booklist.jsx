@@ -2,8 +2,8 @@ import React, { useContext } from 'react';
 import { BooksContext } from '../context/BooksContext';
 
 function Booklist() {
- 
-const {bookRecords} = useContext(BooksContext);
+
+  const { bookRecords } = useContext(BooksContext);
   return (
     <div className="container mt-4">
       <h2>Book Records</h2>
@@ -22,7 +22,7 @@ const {bookRecords} = useContext(BooksContext);
             <tr key={index}>
               <th scope="row">{index + 1}</th>
               <td>{book.title}</td>
-        
+
               <td>{book.author ? book.author.name : 'N/A'}</td>
               <td>{book.isbn}</td>
               <td>{book.publicationDate || 'N/A'}</td>

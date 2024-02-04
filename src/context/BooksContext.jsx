@@ -19,21 +19,12 @@ export const BooksProvider = ({ children }) => {
     }
   };
 
-  const deleteBook = (id) => {
-    setBookRecords(bookRecords.filter(book => book.id !== id));
-    // Optionally, send a request to your backend to delete the book permanently
-  };
-
-  const editBook = (id, updatedBook) => {
-    const updatedBooks = bookRecords.map(book => book.id === id ? { ...book, ...updatedBook } : book);
-    setBookRecords(updatedBooks);
-  };
   useEffect(() => {
     fetchAllBooks();
   }, []);
 
   return (
-    <BooksContext.Provider value={{ bookRecords, deleteBook, editBook }}>
+    <BooksContext.Provider value={{ bookRecords }}>
       {children}
     </BooksContext.Provider>
   );

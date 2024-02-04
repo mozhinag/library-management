@@ -1,26 +1,15 @@
 import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { useEffect, useContext, useState } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
-import { BooksContext } from '../context/BooksContext';
+
+
 
 function AddBooks() {
 
   const [bookRecords, setBookRecords] = useState([]);
-  const { bookId } = useParams();
-  const { editBook } = useContext(BooksContext);
-  const bookToEdit = bookRecords.find(book => book.id === bookId); // Find the book to edit
-
-  // Formik initial values, adjusted to handle editing by checking if bookToEdit exists
-  const initialValues = bookToEdit ? {
-    title: bookToEdit.title,
-    language: '', // Assuming you have a language field. Adjust accordingly.
-    isbn: bookToEdit.isbn,
-    bpd: bookToEdit.publicationDate,
-    author: bookToEdit.author || { name: '', dob: '', bio: '' }, // Adjust based on your structure
-  } : {
+   const initialValues = {
     title: '',
     language: '',
     isbn: '',
@@ -39,12 +28,10 @@ function AddBooks() {
       dob: Yup.date().required('Required'),
     }),
   });
+  
 
-  const onSubmit = async (values, { setSubmitting }) => {
-    if (bookToEdit) {
-
-      editBook(bookId, values);
-    } else {
+  const onSubmit = async (values) => {
+   
       try {
         const res = await axios.post("https://65acca18adbd5aa31bdf8da5.mockapi.io/details/details", values);
         console.log(values);
@@ -57,7 +44,7 @@ function AddBooks() {
 
       }
     }
-  };
+  
 
 
   return (

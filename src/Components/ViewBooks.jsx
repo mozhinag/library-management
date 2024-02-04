@@ -1,12 +1,10 @@
 import React, { useContext } from 'react';
 import { BooksContext } from '../context/BooksContext';
-import { useNavigate } from 'react-router-dom';
+
 function ViewBooks() {
-    const navigate = useNavigate();
-    const { bookRecords, deleteBook, editBook } = useContext(BooksContext);
-    const handleEdit = (bookId) => {
-        navigate(`/AddBooks/${bookId}`);
-    };
+  
+    const { bookRecords } = useContext(BooksContext);
+   
 
     return (
         <div>
@@ -32,10 +30,10 @@ function ViewBooks() {
                                 <td>{book.isbn}</td>
                                 <td>{book.publicationDate}</td>
                                 <td>
-                                    <button onClick={() => handleEdit(book.id)} style={{ border: 'none', background: 'none' }}>
+                                    <button  style={{ border: 'none', background: 'none' }}>
                                         <i className="bi bi-pencil-square fs-3" style={{ color: 'green' }}></i>
                                     </button>
-                                    <button onClick={() => deleteBook(book.id)} style={{ border: 'none', background: 'none', marginLeft: '8px' }}>
+                                    <button  style={{ border: 'none', background: 'none', marginLeft: '8px' }}>
                                         <i className="bi bi-trash3 fs-3" style={{ color: 'red' }}></i>
                                     </button>
                                 </td>
