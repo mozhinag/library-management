@@ -1,43 +1,38 @@
 import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { useState,useEffect} from 'react';
+import { useEffect, useContext, useState } from 'react';
 import axios from 'axios';
+import { useParams } from 'react-router-dom';
+import { BooksContext } from '../context/BooksContext';
 
 function AddBooks() {
-  
+
   const [bookRecords, setBookRecords] = useState([]);
- 
+  const { bookId } = useParams();
+  const { editBook } = useContext(BooksContext);
+  const bookToEdit = bookRecords.find(book => book.id === bookId); // Find the book to edit
 
-  const fetchAllBooks = async () => {
-    try {
-      const books = await axios.get("https://65acca18adbd5aa31bdf8da5.mockapi.io/details/details");
-      console.log(books);
-      setBookRecords(books); 
-      
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    fetchAllBooks();
-  }, []); 
-  const initialValues = {
+  // Formik initial values, adjusted to handle editing by checking if bookToEdit exists
+  const initialValues = bookToEdit ? {
+    title: bookToEdit.title,
+    language: '', // Assuming you have a language field. Adjust accordingly.
+    isbn: bookToEdit.isbn,
+    bpd: bookToEdit.publicationDate,
+    author: bookToEdit.author || { name: '', dob: '', bio: '' }, // Adjust based on your structure
+  } : {
     title: '',
     language: '',
     isbn: '',
-    author: {
-      name: '',
-      dob: '',
-      bio: '',
-    },
+    bpd: '',
+    author: { name: '', dob: '', bio: '' },
   };
 
   const validationSchema = Yup.object().shape({
     title: Yup.string().max(20, 'Title can be max 20 characters').required('Required'),
     language: Yup.string().max(15, 'Language can be max 15 characters').required('Required'),
     isbn: Yup.string().required('Required'),
+    bpd: Yup.date().required('Required'),
     author: Yup.object().shape({
       name: Yup.string().min(10, 'Name can be minimum 10 characters').required('Required'),
       bio: Yup.string().max(30, 'Bio can be max 30 words').required('Required'),
@@ -45,20 +40,25 @@ function AddBooks() {
     }),
   });
 
-  const onSubmit = async (values, { resetForm }) => {
-    try {
-      const res = await axios.post("https://65acca18adbd5aa31bdf8da5.mockapi.io/details/details", values);
-      console.log(values);
-      setBookRecords(res); 
-     
-      resetForm(); 
-      alert ('added successfully')
-    } catch (error) {
-      console.log(error);
-     
+  const onSubmit = async (values, { setSubmitting }) => {
+    if (bookToEdit) {
+
+      editBook(bookId, values);
+    } else {
+      try {
+        const res = await axios.post("https://65acca18adbd5aa31bdf8da5.mockapi.io/details/details", values);
+        console.log(values);
+        setBookRecords(res);
+        bookRecords(res);
+        // resetForm(); 
+        alert('added successfully')
+      } catch (error) {
+        console.log(error);
+
+      }
     }
   };
-  
+
 
   return (
     <>
@@ -81,6 +81,12 @@ function AddBooks() {
                   <label className="form-label text-black fw-bold fs-2">Language</label>
                   <Field type="text" name="language" className="form-control" />
                   <ErrorMessage name="language" component="div" className="text-danger" />
+                </div>
+                {/* Book Publication Date */}
+                <div className="col-lg-5 mb-3">
+                  <label className="form-label text-black fw-bold fs-2">BOOK PUBLICATION DATE</label>
+                  <Field type="date" name="bpd" className="form-control" />
+                  <ErrorMessage name="bpd" component="div" className="text-danger" />
                 </div>
 
                 {/* ISBN Field */}

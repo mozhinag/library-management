@@ -1,27 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useContext } from 'react';
+import { BooksContext } from '../context/BooksContext';
 
 function Booklist() {
-  const [bookRecords, setBookRecords] = useState([]);
-
-  const fetchAllBooks = async () => {
-    try {
-      const response = await axios.get("https://65acca18adbd5aa31bdf8da5.mockapi.io/details/details");
-      console.log(response.data);
-      if (response.data && Array.isArray(response.data.books)) {
-        setBookRecords(response.data.books);
-      } else {
-        console.error('Books data is not an array:', response.data);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    fetchAllBooks();
-  }, []);
-
+ 
+const {bookRecords} = useContext(BooksContext);
   return (
     <div className="container mt-4">
       <h2>Book Records</h2>

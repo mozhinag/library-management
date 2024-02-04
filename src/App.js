@@ -6,8 +6,10 @@ import './App.css';
 import { Link } from 'react-router-dom';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './Components/home.css';
+import { BooksProvider } from './context/BooksContext';
 function App() {
   return (
+    <BooksProvider>
     <BrowserRouter>
       <div className='container-fluid'>
         <div className='row'>
@@ -42,6 +44,7 @@ function App() {
           <Routes>
             <Route path='/' element={<Homepage />} />
             <Route path='/AddBooks' element={<AddBooks />} />
+            <Route path='/AddBooks/:bookId' element={<AddBooks />} />
             <Route path='/Booklist' element={<Booklist />} />
             <Route path='/ViewBooks' element={<ViewBooks />} />
 
@@ -52,6 +55,7 @@ function App() {
         </div>
       </div>
     </BrowserRouter>
+    </BooksProvider>
   );
 }
 
