@@ -44,7 +44,7 @@ function App() {
             <Routes>
               <Route path='/' element={<Homepage />} />
               <Route path='/AddBooks' element={<AddBooks />} />
-              {/* <Route path='/AddBooks/:bookId' element={<AddBooks />} /> */}
+              <Route path='/AddBooks/:bookId' element={<AddBooks />} />
               <Route path='/Booklist' element={<Booklist />} />
               <Route path='/ViewBooks' element={<ViewBooks />} />
 

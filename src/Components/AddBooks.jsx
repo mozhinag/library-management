@@ -1,21 +1,38 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { useState } from 'react';
+import { BooksContext } from '../context/BooksContext';
 import axios from 'axios';
 
 
 
 function AddBooks() {
-
-  const [bookRecords, setBookRecords] = useState([]);
-   const initialValues = {
+  const { bookRecords, clearEditingBook, setBookRecords } = useContext(BooksContext);
+  const { bookId } = useParams();
+  const navigate = useNavigate();
+  
+  // Define a state to manage form values
+  const [formValues, setFormValues] = useState({
     title: '',
     language: '',
     isbn: '',
     bpd: '',
     author: { name: '', dob: '', bio: '' },
-  };
+  });
+
+  useEffect(() => {
+    // If editing, find the book and set it as form values
+    if (bookId) {
+      const bookToEdit = bookRecords.find(book => book.id.toString() === bookId);
+      if (bookToEdit) {
+        setFormValues({
+          ...bookToEdit,
+          bpd: bookToEdit.bpd?.split('T')[0], // Adjust if necessary for your date format
+        });
+      }
+    }
+  }, [bookId, bookRecords]);
 
   const validationSchema = Yup.object().shape({
     title: Yup.string().max(20, 'Title can be max 20 characters').required('Required'),
@@ -28,33 +45,43 @@ function AddBooks() {
       dob: Yup.date().required('Required'),
     }),
   });
-  
 
-  const onSubmit = async (values) => {
-   
-      try {
-        const res = await axios.post("https://65acca18adbd5aa31bdf8da5.mockapi.io/details/details", values);
-        console.log(values);
-        setBookRecords(res);
-        bookRecords(res);
-        // resetForm(); 
-        alert('added successfully')
-      } catch (error) {
-        console.log(error);
-
+  const onSubmit = async (values, { setSubmitting }) => {
+    try {
+      if (bookId) {
+        // If editing, update the book
+        const response = await axios.put(`https://65acca18adbd5aa31bdf8da5.mockapi.io/details/details/${bookId}`, values);
+        // Update local state to reflect the edited book
+        const updatedBooks = bookRecords.map(book => book.id.toString() === bookId ? response.data : book);
+        setBookRecords(updatedBooks);
+        alert('Book updated successfully');
+        navigate('/ViewBooks');
+      } else {
+        // If adding, post a new book
+        const response = await axios.post("https://65acca18adbd5aa31bdf8da5.mockapi.io/details/details", values);
+        // Update local state to include the new book
+        setBookRecords([...bookRecords, response.data]);
+        alert('Book added successfully');
       }
+      setSubmitting(false);
+      clearEditingBook(); // Clear any editing state
+      // Navigate back to the book list
+    } catch (error) {
+      console.error('There was an error:', error);
+      alert('Failed to process the book');
+      setSubmitting(false);
     }
-  
-
+  };
 
   return (
     <>
-      <div className="container-fluid">
-        <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
-          {({ errors, touched }) => (
-            <Form>
-              <div className="row justify-content-center">
-                <h1 className="h3 text-center text-black fw-bold fs-1 ">Book</h1>
+    <div className="container-fluid">
+    <Formik initialValues={formValues} validationSchema={validationSchema} onSubmit={onSubmit} enableReinitialize>
+      {({ errors, touched, setFieldValue }) => (
+        <Form>
+          <div className="row justify-content-center">
+            <h1 className="h3 text-center text-black fw-bold fs-1 ">Book</h1>
+        
 
                 {/* Book Title Field */}
                 <div className="col-lg-5 mb-3">
@@ -111,16 +138,15 @@ function AddBooks() {
 
                 {/* Submit Button */}
                 <div className="col-lg-5 text-center mt-4">
-                  <button type="submit" className="btn btn-primary px-5 py-2">Submit</button>
-                </div>
+            <button type="submit" className="btn btn-primary px-5 py-2">Submit</button>
+            </div>
+          </div>
+        </Form>
+      )}
+    </Formik>
+  </div>
+  </>
+);
 
-              </div>
-            </Form>
-          )}
-        </Formik>
-      </div>
-    </>
-  );
-}
-
+      }
 export default AddBooks;

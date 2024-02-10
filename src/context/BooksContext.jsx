@@ -5,6 +5,16 @@ export const BooksContext = createContext();
 
 export const BooksProvider = ({ children }) => {
   const [bookRecords, setBookRecords] = useState([]);
+  const [editingBook, setEditingBook] = useState(null); // State to manage the currently editing book
+
+  // Method to initiate editing a book
+  const startEditingBook = (bookId) => {
+    setEditingBook(bookId);
+  };
+  // Method to clear the editing state
+  const clearEditingBook = () => {
+    setEditingBook(null);
+  };
 
   const fetchAllBooks = async () => {
     try {
@@ -24,7 +34,7 @@ export const BooksProvider = ({ children }) => {
   }, []);
 
   return (
-    <BooksContext.Provider value={{ bookRecords }}>
+    <BooksContext.Provider value={{ bookRecords, setBookRecords,editingBook,startEditingBook,setEditingBook,clearEditingBook }}>
       {children}
     </BooksContext.Provider>
   );
