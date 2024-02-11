@@ -5,15 +5,27 @@ export const BooksContext = createContext();
 
 export const BooksProvider = ({ children }) => {
   const [bookRecords, setBookRecords] = useState([]);
-  const [editingBook, setEditingBook] = useState(null); // State to manage the currently editing book
+  const [editingBook, setEditingBook] = useState(null); 
 
-  // Method to initiate editing a book
+
   const startEditingBook = (bookId) => {
     setEditingBook(bookId);
   };
-  // Method to clear the editing state
+  
   const clearEditingBook = () => {
     setEditingBook(null);
+  };
+  const deleteBook = async (bookId) => {
+    try {
+      
+      await axios.delete(`https://65acca18adbd5aa31bdf8da5.mockapi.io/details/details/${bookId}`);
+      
+      const newBookRecords = bookRecords.filter(book => book.id !== bookId);
+      setBookRecords(newBookRecords);
+      alert('Deleted');
+    } catch (error) {
+      console.error("Failed to delete book:", error);
+    }
   };
 
   const fetchAllBooks = async () => {
@@ -33,8 +45,11 @@ export const BooksProvider = ({ children }) => {
     fetchAllBooks();
   }, []);
 
+
+
+
   return (
-    <BooksContext.Provider value={{ bookRecords, setBookRecords,editingBook,startEditingBook,setEditingBook,clearEditingBook }}>
+    <BooksContext.Provider value={{ bookRecords, setBookRecords,editingBook,startEditingBook,setEditingBook,clearEditingBook ,deleteBook}}>
       {children}
     </BooksContext.Provider>
   );
