@@ -25,7 +25,7 @@ function Booklist() {
 
               <td>{book.author ? book.author.name : 'N/A'}</td>
               <td>{book.isbn}</td>
-              <td>{book.publicationDate || 'N/A'}</td>
+              <td>{book.bpd || 'N/A'}</td>
             </tr>
           ))}
         </tbody>

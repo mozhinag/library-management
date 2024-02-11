@@ -33,7 +33,7 @@ function ViewBooks() {
                 <td>{book.title}</td>
                 <td>{book.author ? book.author.name : 'N/A'}</td>
                 <td>{book.isbn}</td>
-                <td>{book.publicationDate}</td>
+                <td>{book.bpd ?book.bpd:'N/A'}</td>
                 <td>
                   <button style={{ border: 'none', background: 'none' }} onClick={() => handleEditClick(book.id)}>
                     <i className="bi bi-pencil-square fs-3" style={{ color: 'green' }}></i>
