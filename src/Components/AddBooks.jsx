@@ -12,7 +12,7 @@ function AddBooks() {
   const { bookId } = useParams();
   const navigate = useNavigate();
   
-  // Define a state to manage form values
+ 
   const [formValues, setFormValues] = useState({
     title: '',
     language: '',
@@ -22,13 +22,13 @@ function AddBooks() {
   });
 
   useEffect(() => {
-    // If editing, find the book and set it as form values
+    
     if (bookId) {
       const bookToEdit = bookRecords.find(book => book.id.toString() === bookId);
       if (bookToEdit) {
         setFormValues({
           ...bookToEdit,
-          bpd: bookToEdit.bpd?.split('T')[0], // Adjust if necessary for your date format
+          bpd: bookToEdit.bpd?.split('T')[0], 
         });
       }
     }
@@ -48,31 +48,31 @@ function AddBooks() {
 
   const onSubmit = async (values, { setSubmitting, resetForm }) => {
     try {
-      let updatedBooks = [...bookRecords]; // Start with a copy of the current book records
+      let updatedBooks = [...bookRecords]; 
       
       if (bookId) {
-        // Editing an existing book
+       
         await axios.put(`https://65acca18adbd5aa31bdf8da5.mockapi.io/details/details/${bookId}`, values);
         
-        // Update the local copy with the edited book
+       
         updatedBooks = updatedBooks.map(book => book.id.toString() === bookId ? { ...book, ...values } : book);
       } else {
-        // Adding a new book
+      
         const response = await axios.post("https://65acca18adbd5aa31bdf8da5.mockapi.io/details/details", values);
         
-        // Add the new book to the local copy
+       
         updatedBooks.push(response.data);
       }
   
-      // Update the global book records state
+    
       setBookRecords(updatedBooks);
       
-      // UI feedback and cleanup
+      
       alert(bookId ? 'Book updated successfully' : 'Book added successfully');
       setSubmitting(false);
       resetForm();
-      clearEditingBook(); // Clear any editing state if present
-      navigate('/ViewBooks'); // Navigate back to the book list
+      clearEditingBook(); 
+      navigate('/ViewBooks'); 
     } catch (error) {
       console.error('There was an error:', error);
       alert('Failed to process the book');

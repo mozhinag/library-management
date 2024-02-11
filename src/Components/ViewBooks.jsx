@@ -3,12 +3,15 @@ import { BooksContext } from '../context/BooksContext';
 import { useNavigate } from 'react-router-dom';
 
 function ViewBooks() {
-  const { bookRecords, startEditingBook } = useContext(BooksContext);
+  const { bookRecords, startEditingBook,deleteBook } = useContext(BooksContext);
   const navigate = useNavigate();
 
   const handleEditClick = (bookId) => {
     startEditingBook(bookId);
-    navigate(`/AddBooks/${bookId}`); // Ensure you have a route defined for this path in your App component
+    navigate(`/AddBooks/${bookId}`); 
+  };
+  const handleDeleteClick = (bookId) => {
+    deleteBook(bookId);
   };
 
   return (
@@ -38,7 +41,7 @@ function ViewBooks() {
                   <button style={{ border: 'none', background: 'none' }} onClick={() => handleEditClick(book.id)}>
                     <i className="bi bi-pencil-square fs-3" style={{ color: 'green' }}></i>
                   </button>
-                  <button style={{ border: 'none', background: 'none', marginLeft: '8px' }}>
+                  <button style={{ border: 'none', background: 'none', marginLeft: '8px' }} onClick={()=>handleDeleteClick(book.id)}>
                     <i className="bi bi-trash3 fs-3" style={{ color: 'red' }}></i>
                   </button>
                 </td>
